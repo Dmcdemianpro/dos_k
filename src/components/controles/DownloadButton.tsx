@@ -15,7 +15,7 @@ export default function DownloadButton({ resultados }: DownloadButtonProps) {
 
       // Crear blob y descargar
       // Crear blob y descargar
-const blob = new Blob([buffer.buffer.subarray(buffer.byteOffset, buffer.byteOffset + buffer.length)], {
+      const blob = new Blob([new Uint8Array(buffer.buffer)], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 });
 
