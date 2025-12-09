@@ -1,64 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Hospital, Upload, AlertCircle } from 'lucide-react';
-import FileUploader from '@/components/FileUploader';
-import ProcessingStatus from '@/components/ProcessingStatus';
-import type { ResultadoProcesamiento } from '@/types/resultado';
+import Link from 'next/link';
+import { Hospital, Pill, ClipboardList, ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
-  const router = useRouter();
-  const [archivoDispensaciones, setArchivoDispensaciones] = useState<File | null>(null);
-  const [archivoCitas, setArchivoCitas] = useState<File | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleProcesar = async () => {
-    if (!archivoDispensaciones || !archivoCitas) {
-      setError('Debe seleccionar ambos archivos antes de continuar');
-      return;
-    }
-
-    setError(null);
-    setIsProcessing(true);
-
-    try {
-      const formData = new FormData();
-      formData.append('dispensaciones', archivoDispensaciones);
-      formData.append('citas', archivoCitas);
-
-      const response = await fetch('/api/procesar', {
-        method: 'POST',
-        body: formData
-      });
-
-      const data: ResultadoProcesamiento = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Error al procesar los archivos');
-      }
-
-      // Guardar resultados en sessionStorage para la página de resultados
-      sessionStorage.setItem('resultados', JSON.stringify(data.resultados));
-      sessionStorage.setItem('estadisticas', JSON.stringify(data.estadisticas));
-
-      // Navegar a página de resultados
-      router.push('/resultados');
-
-    } catch (err) {
-      console.error('Error:', err);
-      setError(err instanceof Error ? err.message : 'Error desconocido al procesar los archivos');
-      setIsProcessing(false);
-    }
-  };
-
-  const puedeProc = archivoDispensaciones && archivoCitas;
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-      {isProcessing && <ProcessingStatus />}
-
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -68,10 +15,10 @@ export default function HomePage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
-                Sistema de Notificación de Recetas
+                Sistema de Automatización - Telemedicina HEC
               </h1>
               <p className="text-sm text-gray-600">
-                Telemedicina - Cruce de Dispensaciones y Citas
+                Herramientas para optimizar procesos de atención
               </p>
             </div>
           </div>
@@ -80,102 +27,99 @@ export default function HomePage() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="max-w-3xl mx-auto">
-          {/* Card Principal */}
-          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                Procesar Archivos
-              </h2>
-              <p className="text-gray-600">
-                Sube los archivos de dispensaciones y citas para generar la lista de pacientes a notificar
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Selecciona el módulo que necesitas
+          </h2>
+          <p className="text-lg text-gray-600">
+            Elige entre nuestros sistemas automatizados para gestionar recetas o controles médicos
+          </p>
+        </div>
+
+        {/* Módulos Grid */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {/* Módulo 1: Recetas */}
+          <Link href="/recetas" className="block group">
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 h-full">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-blue-100 rounded-lg p-3 group-hover:bg-blue-200 transition-colors">
+                  <Pill className="w-8 h-8 text-blue-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">Recetas</h3>
+              </div>
+
+              <p className="text-gray-600 mb-6">
+                Cruza datos de recetas de dispensación con atenciones de telemedicina para identificar pacientes a notificar
               </p>
-            </div>
 
-            {/* Error Message */}
-            {error && (
-              <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <h3 className="font-semibold text-red-900 mb-1">Error</h3>
-                  <p className="text-sm text-red-700">{error}</p>
+              <div className="space-y-2 mb-6">
+                <div className="flex items-start gap-2 text-sm text-gray-700">
+                  <div className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 flex-shrink-0"></div>
+                  <span>Identifica pacientes que requieren notificación</span>
+                </div>
+                <div className="flex items-start gap-2 text-sm text-gray-700">
+                  <div className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 flex-shrink-0"></div>
+                  <span>Genera planilla con datos de contacto</span>
+                </div>
+                <div className="flex items-start gap-2 text-sm text-gray-700">
+                  <div className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 flex-shrink-0"></div>
+                  <span>Normalización automática de RUTs</span>
                 </div>
               </div>
-            )}
 
-            {/* File Uploaders */}
-            <div className="space-y-6 mb-8">
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="flex items-center justify-center w-8 h-8 bg-primary text-white rounded-full font-bold text-sm">
-                    1
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    Archivo de Dispensaciones
-                  </h3>
-                </div>
-                <FileUploader
-                  label=""
-                  description="Informe_de_dispensaciones_*.xlsx"
-                  selectedFile={archivoDispensaciones}
-                  onFileSelect={setArchivoDispensaciones}
-                />
-              </div>
-
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="flex items-center justify-center w-8 h-8 bg-primary text-white rounded-full font-bold text-sm">
-                    2
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    Archivo de Citas
-                  </h3>
-                </div>
-                <FileUploader
-                  label=""
-                  description="GeneralCitas_export_*.xlsx"
-                  selectedFile={archivoCitas}
-                  onFileSelect={setArchivoCitas}
-                />
+              <div className="flex items-center justify-end text-blue-600 font-semibold group-hover:gap-3 transition-all">
+                <span>Acceder al módulo</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
+          </Link>
 
-            {/* Botón Procesar */}
-            <button
-              onClick={handleProcesar}
-              disabled={!puedeProc || isProcessing}
-              className={`
-                w-full py-4 rounded-lg font-bold text-lg transition-all duration-200
-                flex items-center justify-center gap-3
-                ${puedeProc && !isProcessing
-                  ? 'bg-primary text-white hover:bg-primary-dark shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }
-              `}
-            >
-              <Upload className="w-6 h-6" />
-              {isProcessing ? 'Procesando...' : 'Procesar Archivos'}
-            </button>
+          {/* Módulo 2: Controles */}
+          <Link href="/controles" className="block group">
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 h-full">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-green-100 rounded-lg p-3 group-hover:bg-green-200 transition-colors">
+                  <ClipboardList className="w-8 h-8 text-green-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">Controles de Telemedicina</h3>
+              </div>
 
-            {/* Info adicional */}
-            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h4 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4" />
-                Información importante
-              </h4>
-              <ul className="text-sm text-blue-800 space-y-1 ml-6 list-disc">
-                <li>Los archivos deben estar en formato Excel (.xlsx o .xls)</li>
-                <li>Tamaño máximo por archivo: 10 MB</li>
-                <li>Se cruzarán automáticamente las recetas con las citas validadas</li>
-                <li>El resultado incluirá datos de contacto para notificaciones</li>
-              </ul>
+              <p className="text-gray-600 mb-6">
+                Procesa el informe de producción ambulatoria para generar registro de controles médicos programados
+              </p>
+
+              <div className="space-y-2 mb-6">
+                <div className="flex items-start gap-2 text-sm text-gray-700">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-600 mt-1.5 flex-shrink-0"></div>
+                  <span>Filtra por especialidad y tipo de consulta</span>
+                </div>
+                <div className="flex items-start gap-2 text-sm text-gray-700">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-600 mt-1.5 flex-shrink-0"></div>
+                  <span>Separa por estado y ubicación del paciente</span>
+                </div>
+                <div className="flex items-start gap-2 text-sm text-gray-700">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-600 mt-1.5 flex-shrink-0"></div>
+                  <span>Genera 4 hojas con categorización automática</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end text-green-600 font-semibold group-hover:gap-3 transition-all">
+                <span>Acceder al módulo</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </div>
             </div>
-          </div>
+          </Link>
+        </div>
 
-          {/* Footer Info */}
-          <div className="mt-8 text-center text-sm text-gray-600">
-            <p>
-              Sistema desarrollado para automatizar el proceso de notificación de recetas disponibles
+        {/* Footer Info */}
+        <div className="mt-16 text-center">
+          <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6 max-w-3xl mx-auto">
+            <h4 className="font-semibold text-gray-900 mb-2">
+              Acerca de este sistema
+            </h4>
+            <p className="text-sm text-gray-600">
+              Sistema desarrollado para automatizar y optimizar los procesos de gestión de telemedicina del Hospital El Carmen.
+              Cada módulo está diseñado para simplificar tareas específicas y mejorar la eficiencia del personal de salud.
             </p>
           </div>
         </div>
