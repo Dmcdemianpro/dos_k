@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer'; // <--- AGREGAR ESTA LÍNEA
 import React from 'react';
 import { Download } from 'lucide-react';
 import { generarExcelControles } from '@/lib/controles/generador';
