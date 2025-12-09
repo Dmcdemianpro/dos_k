@@ -14,9 +14,10 @@ export default function DownloadButton({ resultados }: DownloadButtonProps) {
       const buffer = generarExcelControles(resultados);
 
       // Crear blob y descargar
-      const blob = new Blob([buffer], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      });
+      // Crear blob y descargar
+const blob = new Blob([buffer.buffer.subarray(buffer.byteOffset, buffer.byteOffset + buffer.length)], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+});
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
