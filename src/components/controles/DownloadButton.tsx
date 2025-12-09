@@ -16,10 +16,10 @@ export default function DownloadButton({ resultados }: DownloadButtonProps) {
 
       // Crear blob y descargar
       // Crear blob y descargar
-      const blob = new Blob([new Uint8Array(buffer.buffer)], {
+      // Línea 19 (Opción A: Recomendada)
+    const blob = new Blob([buffer.slice()], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 });
-
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
