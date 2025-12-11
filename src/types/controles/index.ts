@@ -29,7 +29,7 @@ export interface RegistroProduccionAmbulatoria {
   'Observaciones': string;
 }
 
-// Registro procesado y normalizado (20 columnas según spec)
+// Registro procesado y normalizado (21 columnas según spec)
 export interface RegistroControlProcesado {
   'FECHA CITA': string;
   'ESPECIALIDAD': string;
@@ -41,6 +41,7 @@ export interface RegistroControlProcesado {
   'RUN': string;
   'COMUNA': string;
   'TELEFONO': string;
+  'RESPONSABLE CITACION': string;
   'FECHA PROXIMO CONTROL': Date | string;
   'RECETA': string;
   'EXAMEN DE ENDOSCOPIA SOLICITADO DURANTE LA ATENCION': string;

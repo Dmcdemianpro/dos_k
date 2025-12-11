@@ -96,6 +96,7 @@ export async function procesarArchivoControles(
       'RUN': String(row['RUN'] || ''),
       'COMUNA': comuna,
       'TELEFONO': String(row['TELEFONO'] || ''),
+      'RESPONSABLE CITACION': String(row['RESPONSABLE CITACION'] || ''),
       'FECHA PROXIMO CONTROL': row['FECHA PROXIMO CONTROL'] || '',
       'RECETA': String(row['RECETA'] || ''),
       'EXAMEN DE ENDOSCOPIA SOLICITADO DURANTE LA ATENCION': String(row['EXAMEN DE ENDOSCOPIA SOLICITADO DURANTE LA ATENCION'] || ''),
